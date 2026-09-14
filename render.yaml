@@ -2,6 +2,7 @@ services:
   - type: web
     name: campusconnect
     runtime: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: python server.py
     healthCheckPath: /api/health
@@ -16,16 +17,19 @@ services:
         value: "1"
       - key: CAMPUSCONNECT_SEED_DEMO
         value: "0"
+      # NOTE: Render Free web services cannot make outbound SMTP connections
+      # on ports 25/465/587. Keep these unset until an HTTPS email provider
+      # (or a paid web service) is configured.
       - key: CAMPUSCONNECT_EMAIL_MODE
         value: smtp
       - key: CAMPUSCONNECT_SMTP_HOST
-        value: smtp.gmail.com
+        sync: false
       - key: CAMPUSCONNECT_SMTP_PORT
-        value: "587"
+        sync: false
       - key: CAMPUSCONNECT_SMTP_USERNAME
-        value: modipaglu6969@gmail.com
+        sync: false
       - key: CAMPUSCONNECT_SMTP_APP_PASSWORD
-        value: "jzxu osww ihcg ezdt"
+        sync: false
       - key: CAMPUSCONNECT_SMTP_FROM_NAME
         value: Campus Connect
       - key: CAMPUSCONNECT_PUBLIC_URL
@@ -39,18 +43,16 @@ services:
       - key: CAMPUSCONNECT_BOOTSTRAP_ADMIN_NAME
         value: Campus Connect Admin
       - key: CAMPUSCONNECT_BOOTSTRAP_ADMIN_EMAIL
-        value: modipaglu6969@gmail.com
+        sync: false
       - key: CAMPUSCONNECT_BOOTSTRAP_ADMIN_PASSWORD
-        value: admin123
+        sync: false
       - key: CAMPUSCONNECT_BOOTSTRAP_ADMIN_MOBILE
-        value: "0000000000"
-    disk:
-      name: campusconnect-data
-      mountPath: /var/data
-      sizeGB: 1
+        sync: false
 
-
+# Free Postgres is suitable for demos/testing only and expires after 30 days.
 databases:
   - name: campusconnect-db
     databaseName: campusconnect
     user: campusconnect
+    plan: free
+
