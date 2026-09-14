@@ -1,0 +1,3 @@
+@echo off
+echo Starting Campus Connect...
+py server.py

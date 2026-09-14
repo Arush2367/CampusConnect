@@ -1,0 +1,3 @@
+-- Seed data is managed programmatically by backend/database.py
+-- This file is a placeholder for any manual SQL seed scripts.
+-- Run `py server.py` to auto-seed the database.

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Campus Connect — People · Ideas · Opportunities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<!-- ── Auth Screen ─────────────────────────────────────────────────── -->
+<div id="authScreen" class="auth-screen-v2">
+
+  <!-- Top nav -->
+  <header class="auth-topnav">
+    <div class="auth-topnav-brand">
+      <img class="auth-topnav-logo" src="/CampusConnect-assets/logo/campus-connect-logo-transparent.png" alt="Campus Connect">
+    </div>
+    <nav class="auth-topnav-links">
+      <a class="active" data-scroll="top">Home</a>
+      <a data-scroll="about">About</a>
+      <a data-scroll="features">Features</a>
+      <a data-scroll="contact">Contact</a>
+    </nav>
+    <button class="auth-getstarted-btn" id="topGetStartedBtn">Get Started</button>
+  </header>
+
+  <!-- Hero -->
+  <section class="auth-hero-v2" id="top">
+    <div class="auth-hero-illustration" aria-hidden="true"><img src="/CampusConnect-assets/backgrounds/login-background.png" alt=""></div>
+
+    <div class="auth-hero-copy-v2">
+      <p class="auth-eyebrow-v2">UNIFIED CAMPUS PLATFORM</p>
+      <h1>A More Connected<br>Campus for <span>Everyone.</span></h1>
+      <p class="auth-hero-sub">Events. Clubs. Services. People. Possibilities.<br>All in one place.</p>
+      <div class="auth-hero-btns">
+        <button class="auth-cta-primary" id="heroGetStartedBtn">Get Started <span>→</span></button>
+        <button class="auth-cta-ghost" id="heroLearnMoreBtn">Learn More</button>
+      </div>
+    </div>
+
+    <!-- Floating login card -->
+    <div class="auth-card-floating" id="authCardFloating">
+
+      <!-- Login panel -->
+      <div id="loginPanel">
+        <div class="auth-header-v2">
+          <h2>Welcome Back</h2>
+          <p>Log in to your Campus Connect account</p>
+        </div>
+
+        <div class="role-selector animated-role-selector role-selector-v2" id="loginRoleSelector">
+          <span class="role-indicator"></span>
+          <button class="role-btn active" data-role="student"><b><img src="/CampusConnect-assets/icons/custom-profile.png" alt="">Student</b><small>Student access</small></button>
+          <button class="role-btn" data-role="admin"><b><img src="/CampusConnect-assets/icons/custom-admin-staff.png" alt="">Admin / Staff</b><small>Staff access</small></button>
+        </div>
+
+        <form id="loginForm" class="login-form-v2">
+          <label class="input-icon-field">
+            <span class="input-icon"><img src="/CampusConnect-assets/icons/system-user.png" alt=""></span>
+            <input id="loginId" placeholder="Enter your email or ID" required>
+          </label>
+          <label id="loginIdLabel" class="field-hint">STUDENT ID</label>
+          <label class="input-icon-field">
+            <span class="input-icon"><img src="/CampusConnect-assets/icons/system-lock.png" alt=""></span>
+            <input id="loginPassword" type="password" placeholder="Enter your password" required>
+            <button type="button" class="input-icon-toggle" id="togglePwBtn"><img src="/CampusConnect-assets/icons/misc-eye.png" alt=""></button>
+          </label>
+
+          <div class="auth-remember-row">
+            <label class="auth-remember-check"><input type="checkbox" id="rememberMe"> Remember me</label>
+            <a class="auth-forgot-link" id="forgotPwLink">Forgot password?</a>
+          </div>
+
+          <button class="auth-cta-primary full">Log In</button>
+        </form>
+
+        <div class="auth-divider"><span>or continue with</span></div>
+        <div class="auth-sso-row">
+          <button type="button" class="auth-sso-btn" id="ssoGoogle" title="Google"><img src="/CampusConnect-assets/icons/auth-google.png" alt="Google"></button>
+          <button type="button" class="auth-sso-btn" id="ssoMicrosoft" title="Microsoft"><img src="/CampusConnect-assets/icons/auth-microsoft.png" alt="Microsoft"></button>
+          <button type="button" class="auth-sso-btn" id="ssoCollege" title="College ID"><img src="/CampusConnect-assets/icons/custom-campus-services.png" alt="College"></button>
+        </div>
+
+        <div class="info-box">
+          <strong>How do new students get access?</strong>
+          <span>Use Create account to register your campus profile with the details issued by your college.</span>
+        </div>
+
+        <p id="authMessage" class="form-message"></p>
+        <button id="showSignupBtn" type="button" class="text-link">Don't have an account? <b>Sign Up →</b></button>
+      </div>
+
+      <!-- Signup panel -->
+      <div id="signupPanel" class="hidden">
+        <div class="auth-header-v2">
+          <h2>Create your account</h2>
+          <p>Register your profile to get started. You can add your student ID now or later.</p>
+        </div>
+
+        <div class="role-selector animated-role-selector role-selector-v2" id="signupRoleSelector">
+          <span class="role-indicator"></span>
+          <button class="signup-role-btn active" data-signup-role="student"><b>👨‍🎓 Student</b><small>Create student account</small></button>
+          <button class="signup-role-btn" data-signup-role="admin"><b>🧑‍🏫 Staff</b><small>Requires admin approval</small></button>
+        </div>
+
+        <div id="signupRoleNotice" class="role-notice student-mode">
+          <strong>Student account</strong>
+          <span>Students can create an account directly. Your optional student ID can be added now or later.</span>
+        </div>
+
+        <form id="signupForm" class="login-form-v2 signup-form">
+          <div class="form-grid">
+            <div><label>FULL NAME</label><input id="suName" required></div>
+            <div><label id="suBranchLabel">BRANCH</label><input id="suBranch" placeholder="CSE / BBA / etc." required></div>
+          </div>
+          <div class="form-grid">
+            <div id="semesterField">
+              <label>SEMESTER</label>
+              <select id="suSemester" required>
+                <option value="">Choose semester</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8</option>
+              </select>
+            </div>
+            <div>
+              <label>CAMPUS</label>
+              <div class="campus-select-wrap">
+                <button type="button" id="campusButton" class="select-look">Dwarka Campus <span>⌄</span></button>
+                <div id="campusMenu" class="campus-menu">
+                  <button type="button" data-campus="Dwarka Campus" class="selected">Dwarka Campus <span>Available</span></button>
+                  <button type="button" data-campus="G.B Pant">G.B Pant <span>Coming later</span></button>
+                  <button type="button" data-campus="Shakarpur">Shakarpur <span>Coming later</span></button>
+                  <button type="button" data-campus="Bhai Premanand">Bhai Premanand <span>Coming later</span></button>
+                </div>
+              </div>
+              <input type="hidden" id="suCampus" value="Dwarka Campus">
+            </div>
+          </div>
+          <div class="form-grid">
+            <div><label id="suIdLabel">STUDENT / COLLEGE ID <em>OPTIONAL</em></label><input id="suStudentId" placeholder="e.g. STU1026"></div>
+            <div><label>MOBILE NUMBER</label><input id="suMobile" inputmode="numeric" maxlength="10" placeholder="10 digit mobile" required></div>
+          </div>
+          <div class="form-grid">
+            <div><label>PASSWORD</label><input id="suPassword" type="password" minlength="6" required></div>
+            <div><label id="suEmailLabel">EMAIL <em>REQUIRED</em></label><input id="suEmail" type="email"></div>
+          </div>
+          <div><label>PROFILE PHOTO <em>OPTIONAL</em></label><input id="suPhoto" type="file" accept="image/*"></div>
+          <p id="signupRoleHelp" class="section-note">Currently available for Dwarka Campus. Additional campuses will be added soon.</p>
+          <button id="signupSubmitBtn" class="auth-cta-primary full">Create account <span>→</span></button>
+        </form>
+
+        <p id="signupMessage" class="form-message"></p>
+        <button id="showLoginBtn" type="button" class="text-link">← Back to sign in</button>
+      </div>
+
+      <div id="otpPanel" class="hidden auth-verify-card">
+        <div class="auth-header-v2">
+          <p class="verify-eyebrow">SECURE SIGN UP</p>
+          <h2>Verify your email</h2>
+          <p>Enter the 6-digit code sent to <strong id="otpEmailLabel">your email</strong>.</p>
+        </div>
+        <div class="verify-code-wrap">
+          <label for="otpCode">VERIFICATION CODE</label>
+          <input id="otpCode" class="verify-code-input" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000">
+        </div>
+        <p id="otpMessage" class="form-message"></p>
+        <div class="verify-meta-row">
+          <span id="otpExpiryText">Code expires in 5 minutes.</span>
+          <button id="resendOtpBtn" type="button" class="text-link small-link">Resend code</button>
+        </div>
+        <button id="verifyOtpBtn" type="button" class="auth-cta-primary full">Verify email <span>→</span></button>
+        <button id="backToSignupBtn" type="button" class="text-link">← Back to sign up</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="auth-info-section" id="about">
+    <div class="auth-info-card">
+      <span class="cb-kicker">ABOUT CAMPUS CONNECT</span>
+      <h2>One calmer place for campus life.</h2>
+      <p>Campus Connect brings people, clubs, events, requests, campus services and everyday tasks into one connected student and operations experience.</p>
+      <div class="auth-info-points"><span>People & clubs</span><span>Events & meetings</span><span>Campus services</span><span>Requests & support</span></div>
+    </div>
+  </section>
+
+  <!-- Bottom quick-feature strip -->
+  <section class="auth-feature-strip-v2" id="features">
+    <div class="auth-feature-strip-items">
+      <div class="auth-feature-item"><span class="auth-feature-icon events"><img src="/CampusConnect-assets/icons/custom-events.png" alt=""></span><strong>Events</strong><small>Discover & Participate</small></div>
+      <div class="auth-feature-item"><span class="auth-feature-icon clubs"><img src="/CampusConnect-assets/icons/custom-clubs.png" alt=""></span><strong>Clubs</strong><small>Find Your Community</small></div>
+      <div class="auth-feature-item"><span class="auth-feature-icon services"><img src="/CampusConnect-assets/icons/custom-campus-services.png" alt=""></span><strong>Campus Services</strong><small>Easier Access</small></div>
+      <div class="auth-feature-item"><span class="auth-feature-icon report"><img src="/CampusConnect-assets/icons/custom-reports.png" alt=""></span><strong>Report & Support</strong><small>A Safer Campus</small></div>
+      <div class="auth-feature-item"><span class="auth-feature-icon notif"><img src="/CampusConnect-assets/icons/custom-notifications.png" alt=""></span><strong>Notifications</strong><small>Stay Updated</small></div>
+    </div>
+    <div class="auth-feature-quote">More People<br>Brighter<br>Possibilities</div>
+  </section>
+
+  <section class="auth-info-section auth-contact-section" id="contact">
+    <div class="auth-info-card">
+      <span class="cb-kicker">CONTACT</span>
+      <h2>Need help with Campus Connect?</h2>
+      <p>Use your campus administrator or staff support channel for account, access, locker and service assistance.</p>
+      <div class="auth-contact-actions"><span>Campus support</span><span>Account & access</span><span>Campus operations</span></div>
+    </div>
+  </section>
+
+  <p class="tiny-note">Campus Connect · Secure institutional access</p>
+</div>
+
+<!-- ── Main App Shell ──────────────────────────────────────────────── -->
+<section id="mainScreen" class="main-screen hidden">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <img class="sidebar-brand-section-image" src="/CampusConnect-assets/logo/sidebar-campus-connect-section.png" alt="Campus Connect">
+    </div>
+
+    <!-- Nav items injected by app.js -->
+    <nav id="sideNav" class="side-nav"></nav>
+
+    <!-- Settings -->
+    <div class="sidebar-footer">
+      <button class="nav-btn settings-btn" id="sidebarSettingsBtn"><span>⚙</span>Settings</button>
+    </div>
+  </aside>
+
+  <!-- Content area -->
+  <main class="content-area">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <p id="pageEyebrow" class="eyebrow">STUDENT PORTAL</p>
+        <h2 id="pageTitle">Dashboard</h2>
+      </div>
+
+      <div class="topbar-search" id="topbarSearchWrap">
+        <span class="topbar-search-icon">⌕</span>
+        <input id="topbarSearch" type="text" placeholder="Search for events, people, services…" autocomplete="off">
+        <div id="topbarSearchResults" class="topbar-search-results hidden"></div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="notificationBtn" class="icon-btn" type="button" aria-label="Notifications">
+          <img src="/CampusConnect-assets/icons/custom-notifications.png" alt="">
+          <span id="notificationBadge" class="notification-badge hidden">0</span>
+        </button>
+        <button id="themeBtn" class="icon-btn theme-toggle-btn" type="button" aria-label="Toggle theme"><img id="themeBtnIcon" src="/CampusConnect-assets/icons/misc-moon-dark.png" alt=""></button>
+
+        <div class="topbar-profile" id="topbarProfile">
+          <button id="topbarProfileBtn" class="topbar-profile-btn" type="button">
+            <div id="avatar" class="avatar">S</div>
+            <div class="topbar-profile-text">
+              <strong id="signedName">Student</strong>
+              <span id="signedRole">Student</span>
+            </div>
+            <span class="topbar-profile-chevron">⌄</span>
+          </button>
+          <div id="topbarProfileMenu" class="topbar-profile-menu hidden">
+            <button class="topbar-profile-menu-item" id="profileMenuProfile"><img class="menu-item-icon" src="/CampusConnect-assets/icons/transparent/custom-profile.png" alt=""> My Profile</button>
+            <button class="topbar-profile-menu-item" id="profileMenuSettings"><img class="menu-item-icon" src="/CampusConnect-assets/icons/transparent/custom-settings.png" alt=""> Settings</button>
+            <div class="topbar-profile-menu-sep"></div>
+            <button class="topbar-profile-menu-item danger" id="logoutBtn"><img class="menu-item-icon" src="/CampusConnect-assets/icons/misc-logout.png" alt=""> Sign out</button>
+          </div>
+        </div>
+
+        <button id="mobileNavBtn" class="mobile-nav-btn" aria-label="Menu">☰</button>
+      </div>
+    </header>
+
+    <!-- View content injected here -->
+    <div id="viewContainer"></div>
+  </main>
+
+</section>
+
+<!-- Modal root -->
+<div id="modalRoot"></div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
