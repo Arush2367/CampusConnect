@@ -1,0 +1,13 @@
+"""Single explicit Vercel entry point for all Campus Connect API routes."""
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from vercel_handler import VercelHandler
+
+
+class handler(VercelHandler):
+    pass

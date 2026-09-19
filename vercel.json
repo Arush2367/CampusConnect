@@ -8,6 +8,10 @@
   },
   "rewrites": [
     {
+      "source": "/api/:path*",
+      "destination": "/api/router?__campusconnect_route=:path*"
+    },
+    {
       "source": "/q/:path*",
       "destination": "/api/q/:path*"
     }

@@ -8,7 +8,7 @@ from __future__ import annotations
 import os
 import threading
 import logging
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from backend.database import seed
 from server import Handler
@@ -76,15 +76,41 @@ class VercelHandler(Handler):
                 parsed.fragment,
             ))
 
+    def _restore_api_path(self):
+        """Recover the public API path after the Vercel router rewrite."""
+        parsed = urlsplit(self.path)
+        if parsed.path != '/api/router':
+            return
+
+        route = ''
+        remaining_query = []
+        for key, value in parse_qsl(parsed.query, keep_blank_values=True):
+            if key == '__campusconnect_route' and not route:
+                route = value.strip('/')
+            else:
+                remaining_query.append((key, value))
+
+        api_path = '/api' if not route else f'/api/{route}'
+        self.path = urlunsplit((
+            parsed.scheme,
+            parsed.netloc,
+            api_path,
+            urlencode(remaining_query),
+            parsed.fragment,
+        ))
+
     def do_GET(self):
         if self._ready_or_503():
+            self._restore_api_path()
             self._restore_qr_path()
             super().do_GET()
 
     def do_POST(self):
         if self._ready_or_503():
+            self._restore_api_path()
             super().do_POST()
 
     def do_PATCH(self):
         if self._ready_or_503():
+            self._restore_api_path()
             super().do_PATCH()
