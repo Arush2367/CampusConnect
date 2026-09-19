@@ -111,7 +111,7 @@ class PGConnection:
         other_statements = []
 
         for statement in statements:
-            match = re.match(
+            match = re.search(
                 r'CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+([a-zA-Z_][a-zA-Z0-9_]*)',
                 statement,
                 flags=re.I,
