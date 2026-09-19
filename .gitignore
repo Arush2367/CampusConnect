@@ -1,6 +1,6 @@
-# Demo deployment configuration (explicitly tracked for this demo only)
+# Environment configuration: commit the safe example only.
+.env
 .env.*
-!.env
 !.env.example
 
 # Runtime / local data
@@ -30,5 +30,3 @@ Thumbs.db
 node_modules/
 dist/
 build/
-.env.local
-.env.demo

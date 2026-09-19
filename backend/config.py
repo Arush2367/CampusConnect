@@ -1,5 +1,6 @@
 """Campus Buddy — Centralized configuration and constants."""
 import os
+import tempfile
 from pathlib import Path
 
 
@@ -38,13 +39,19 @@ _load_dotenv_file(PROJECT_ROOT / '.env.local')
 # Runtime mode
 ENV_NAME = os.environ.get('CAMPUSCONNECT_ENV', 'development').strip().lower()
 IS_PRODUCTION = ENV_NAME in {'production', 'prod'}
+IS_VERCEL = os.environ.get('VERCEL', '').strip() == '1'
 DATABASE_URL = os.environ.get('DATABASE_URL', '').strip()
 USE_POSTGRES = bool(DATABASE_URL)
 
 # Paths
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / 'public'
-_default_data_dir = '/var/data' if IS_PRODUCTION else str(ROOT / 'data')
+# Vercel Functions have ephemeral writable storage only under /tmp. Database
+# records and sessions must use PostgreSQL in production.
+_default_data_dir = (
+    str(Path(tempfile.gettempdir()) / 'campusconnect') if IS_VERCEL
+    else ('/var/data' if IS_PRODUCTION else str(ROOT / 'data'))
+)
 DATA_DIR = Path(os.environ.get('CAMPUSCONNECT_DATA_DIR', _default_data_dir)).expanduser()
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 UPLOADS_DIR = DATA_DIR / 'uploads'
@@ -55,7 +62,14 @@ DB.parent.mkdir(parents=True, exist_ok=True)
 # Server
 PORT = int(os.environ.get('PORT', '3005'))
 HOST = os.environ.get('CAMPUSCONNECT_HOST', '0.0.0.0' if IS_PRODUCTION else '127.0.0.1')
-PUBLIC_BASE_URL = (os.environ.get('CAMPUSCONNECT_PUBLIC_URL', '').strip().rstrip('/') or os.environ.get('RENDER_EXTERNAL_URL', '').strip().rstrip('/'))
+_vercel_url = os.environ.get('VERCEL_URL', '').strip().rstrip('/')
+if _vercel_url and not _vercel_url.startswith(('http://', 'https://')):
+    _vercel_url = f'https://{_vercel_url}'
+PUBLIC_BASE_URL = (
+    os.environ.get('CAMPUSCONNECT_PUBLIC_URL', '').strip().rstrip('/')
+    or os.environ.get('RENDER_EXTERNAL_URL', '').strip().rstrip('/')
+    or _vercel_url
+)
 PRIMARY_ADMIN_LOGIN = os.environ.get('CAMPUSCONNECT_PRIMARY_ADMIN', 'ADMIN001')
 SESSION_DAYS = 8
 REQUEST_DAYS = 7

@@ -1,0 +1,13 @@
+# Real environment values belong in Vercel's encrypted Environment Variables.
+.env
+.env.local
+.env.*
+!.env.example
+
+# Local-only and development-only material.
+.git
+data/
+tests/
+scripts/
+*.pyc
+__pycache__/

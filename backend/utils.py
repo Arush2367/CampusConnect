@@ -46,6 +46,10 @@ def conn():
             return PGConnection(raw)
         except ImportError as exc:
             raise RuntimeError('DATABASE_URL is set but psycopg is not installed. Run pip install -r requirements.txt.') from exc
+        except Exception as exc:
+            # Keep PostgreSQL connection failures inside the API's controlled
+            # error path instead of letting a serverless invocation crash.
+            raise DatabaseOperationalError('Unable to connect to PostgreSQL.') from exc
     c = sqlite3.connect(DB, timeout=8, check_same_thread=False)
     c.row_factory = sqlite3.Row
     c.execute('PRAGMA foreign_keys=ON')
