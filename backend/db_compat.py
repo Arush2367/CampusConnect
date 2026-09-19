@@ -99,14 +99,57 @@ class PGConnection:
         return PGCursor(cur, self)
 
     def executescript(self, sql_text):
-        # Schema is only used with CREATE IF NOT EXISTS statements and does not
-        # contain semicolons inside string literals. Split conservatively.
-        from backend.db_compat import postgres_schema
+        """Run SQLite schema DDL in an order PostgreSQL accepts."""
         sql = postgres_schema(sql_text)
-        for statement in sql.split(';'):
-            statement = statement.strip()
-            if statement:
-                self.execute(statement)
+        statements = [
+            statement.strip()
+            for statement in sql.split(';')
+            if statement.strip()
+        ]
+
+        table_statements = []
+        other_statements = []
+
+        for statement in statements:
+            match = re.match(
+                r'CREATE\s+TABLE\s+IF\s+NOT\s+EXISTS\s+([a-zA-Z_][a-zA-Z0-9_]*)',
+                statement,
+                flags=re.I,
+            )
+            if match:
+                table_statements.append((match.group(1).lower(), statement))
+            else:
+                other_statements.append(statement)
+
+        created_tables = set()
+
+        while table_statements:
+            progressed = False
+
+            for table_name, statement in table_statements[:]:
+                dependencies = {
+                    name.lower()
+                    for name in re.findall(
+                        r'REFERENCES\s+([a-zA-Z_][a-zA-Z0-9_]*)',
+                        statement,
+                        flags=re.I,
+                    )
+                }
+
+                if dependencies.issubset(created_tables):
+                    self.execute(statement)
+                    created_tables.add(table_name)
+                    table_statements.remove((table_name, statement))
+                    progressed = True
+
+            if not progressed:
+                for table_name, statement in table_statements:
+                    self.execute(statement)
+                    created_tables.add(table_name)
+                break
+
+        for statement in other_statements:
+            self.execute(statement)
 
     def commit(self):
         self._raw.commit()
