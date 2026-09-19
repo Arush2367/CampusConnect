@@ -6,6 +6,19 @@ while production can use PostgreSQL by setting DATABASE_URL.
 import re
 
 
+class PGRow(dict):
+    """Dictionary row that also supports SQLite-style numeric indexes."""
+
+    def __init__(self, values, columns):
+        super().__init__(values)
+        self._ordered_values = tuple(values.get(column) for column in columns)
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self._ordered_values[key]
+        return super().__getitem__(key)
+
+
 def _raise_db_error(exc):
     try:
         from psycopg import errors as pg_errors
@@ -23,15 +36,15 @@ def _translate_sql(sql: str) -> str:
     s = sql
     # SQLite placeholder syntax -> PostgreSQL/psycopg parameter style.
     s = s.replace('?', '%s')
-    # SQLite upsert syntax used by the existing seed/migration code.
-    s = re.sub(r'\bINSERT\s+OR\s+IGNORE\s+INTO\b', 'INSERT INTO', s, flags=re.I)
-    if re.search(r'\bINSERT INTO\b', s, flags=re.I) and 'ON CONFLICT' not in s.upper() and 'INSERT INTO' in s.upper():
-        # Only add DO NOTHING for the legacy INSERT OR IGNORE conversion marker.
-        # The marker is added by a second pass below to avoid changing normal INSERTs.
-        pass
-    # Specific marker produced by the previous substitution: retain a lightweight
-    # convention by converting the prefix to a tagged comment first is more work
-    # than the few call-sites need. They are handled by the regex below.
+    # SQLite transaction mode is not supported by PostgreSQL.
+    s = re.sub(r'^\s*BEGIN\s+IMMEDIATE\s*$', 'BEGIN', s, flags=re.I)
+    # PostgreSQL cannot sum booleans. FILTER preserves the original count meaning.
+    s = re.sub(
+        r"SUM\(\s*([A-Za-z_][A-Za-z0-9_.]*\s*=\s*'[^']+')\s*\)",
+        r'COUNT(*) FILTER (WHERE \1)',
+        s,
+        flags=re.I,
+    )
     # Convert SQLite date helpers used by this project.
     s = s.replace("date('now')", 'CURRENT_DATE')
     s = s.replace("datetime(otp_expires_at)", "otp_expires_at::timestamp")
@@ -63,11 +76,17 @@ class PGCursor:
             _raise_db_error(exc)
         return self
 
+    def _adapt_row(self, row):
+        if row is None or not isinstance(row, dict):
+            return row
+        columns = [description.name for description in self._cursor.description]
+        return PGRow(row, columns)
+
     def fetchone(self):
-        return self._cursor.fetchone()
+        return self._adapt_row(self._cursor.fetchone())
 
     def fetchall(self):
-        return self._cursor.fetchall()
+        return [self._adapt_row(row) for row in self._cursor.fetchall()]
 
     @property
     def rowcount(self):
