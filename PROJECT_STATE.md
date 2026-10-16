@@ -48,3 +48,12 @@
 - No pagination on the gallery grid or events list.
 
 **Untouched areas:** Lockers, Lost & Found, Problem Reporting, Auth, Notifications, Audit — no changes.
+
+## V21 Upgrade Foundation
+**Objective:** Prepare the existing baseline for Dark Mode, Library, Sports, configurable Exam Seating, and AI Assistant work without changing current product behavior.
+
+**Foundation files:** `AI_WORKFLOW.md`, `V21_ROADMAP.md`, `FEATURE_CONTRACT_TEMPLATE.md`, `docs/DARK_MODE_DESIGN_LOCK.md`.
+
+**Behavior/database/API/UI changes:** None. This installer only adds workflow documentation and this state note.
+
+**Safety:** Keep `main` untouched; do all V21 work on `integration/v21`; never expose `.env`, credentials, or private student data to AI tools.
